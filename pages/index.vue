@@ -35,6 +35,7 @@
   </v-container>
   <div>
     <h3>{{id_content.label}}</h3>
+    <p v-if="id_content.isPartOf">{{id_content_map[id_content.isPartOf].label}}</p>
   </div>
   </div>
 </template>
@@ -105,6 +106,7 @@ select * where {
     ?s ex:eventType ?type.
     ?s ex:eventCategory ?category.
     ?s ex:region ?region.
+    optional{?s ex:isPartOf ?isPartOf.}
     ?s rdfs:label ?eventLabel.
     optional{?s crm:P7_took_place_at ?place.}
     optional{?place rdfs:label ?placeLavel; schema:latitude ?lat; schema:longitude ?lon.}
@@ -130,7 +132,7 @@ select * where {
 
     for (const item of data) {
 
-      console.log(item)
+      //console.log(item)
 
       const event_id_dict = {}
       event_id_dict.label = item.eventLabel.value
@@ -173,6 +175,7 @@ select * where {
       items.push({
           id: item.s,
           group: item.region,
+          isPartOf: item.isPartOf,
           type: "point",
           start: getIdFromURI(item.beginDate),
           end: getIdFromURI(item.endDate),
@@ -183,6 +186,7 @@ select * where {
         items.push({
           id: item.s,
           group: item.region,
+          isPartOf: item.isPartOf,
           start: getIdFromURI(item.beginDate),
           end: getIdFromURI(item.endDate),
           content: item.eventLabel.value,
@@ -196,9 +200,10 @@ select * where {
     const id_content_map = {}
 
     for (const item of items) {
-      //console.log(item)
+      console.log(item)
       const content_dict = {}
       content_dict.label = item.content
+      content_dict.isPartOf = item.isPartOf
       id_content_map[item.id] = content_dict
     }
     console.log(id_content_map)
