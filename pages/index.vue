@@ -10,7 +10,9 @@
     </ul>
   </div>
   -->
-  <div id="map-wrap" style="height:50vh;width:90vh;margin-left:auto;margin-right:auto">
+  <div style="display:flex;">
+  <!--<div id="map-wrap" style="height:50vh;width:90vh;margin-left:auto;margin-right:auto">-->
+  <div id="map-wrap" style="height:50vh;width:100%;">
  <client-only>
    <l-map :zoom=13 :center="center" @update:bounds="showBounds">
      <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></l-tile-layer>
@@ -40,14 +42,16 @@
    </l-map>
  </client-only>
 </div>
+<div style="height:50vh;width:100%;">
+    <h3 style="text-align: center;">{{id_content.label}}</h3>
+    <p v-if="id_content.isPartOf">{{id_content_map[id_content.isPartOf].label}}</p>
+  </div>
+</div>
   <v-container class="container">
     <timeline v-on:click="onClick" v-on:rangechanged="onRangechanged" ref="timeline" :items="items" :groups="groups" :options="options">
     </timeline>
   </v-container>
-  <div>
-    <h3>{{id_content.label}}</h3>
-    <p v-if="id_content.isPartOf">{{id_content_map[id_content.isPartOf].label}}</p>
-  </div>
+
   </div>
 </template>
 
@@ -121,7 +125,7 @@ select * where {
     ?s ex:eventType ?type.
     ?s ex:eventCategory ?category.
     ?s ex:region ?region.
-    optional{?s ex:isPartOf ?isPartOf.}
+    optional{?s crm:P10_falls_within ?isPartOf.}
     ?s rdfs:label ?eventLabel.
     optional{?s crm:P7_took_place_at ?place.}
     optional{?place rdfs:label ?placeLavel; schema:latitude ?lat; schema:longitude ?lon.}
